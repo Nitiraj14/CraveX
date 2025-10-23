@@ -11,6 +11,7 @@
 // export default order
 
 import React, { useEffect, useState } from "react";
+import api from "../services/api";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -20,15 +21,8 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("http://localhost:5000/Cravex/order/user", {
-          credentials: "include", // send JWT cookie
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setOrders(data);
-        } else {
-          console.error("Failed to fetch orders:", data.message);
-        }
+        const res = await api.get("/Cravex/order/user", { withCredentials: true });
+        setOrders(res.data);
       } catch (err) {
         console.error("Server error:", err);
       } finally {

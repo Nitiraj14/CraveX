@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 const UserProfileCard = () => {
@@ -9,13 +10,9 @@ const UserProfileCard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/CraveX/user/get", {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (res.ok && data.user) {
-          setUser(data.user);
+        const res = await api.get("/CraveX/user/get", { withCredentials: true });
+        if (res.data && res.data.user) {
+          setUser(res.data.user);
         } else {
           setUser(null);
         }
@@ -26,20 +23,16 @@ const UserProfileCard = () => {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, []);
 
   const handleLogout = async () => {
     try {
-      const res = await fetch("http://localhost:5000/CraveX/user/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      if (res.ok) {
+      const res = await api.post("/CraveX/user/logout", {}, { withCredentials: true });
+      if (res.status === 200) {
         setUser(null);
         navigate("/");
-        window.location.reload(); // refresh to clear navbar state
+        window.location.reload();
       } else {
         console.error("Logout failed");
       }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
@@ -10,18 +11,8 @@ const Cart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await fetch("http://localhost:5000/Cravex/cart", {
-          credentials: "include",
-          // send JWT cookie
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          setCartItems(data.items || []); // extract items array
-        } else {
-          console.error("Error fetching cart:", data.message);
-        }
+        const res = await api.get("/Cravex/cart", { withCredentials: true });
+        setCartItems(res.data.items || []);
       } catch (err) {
         console.error("Server error:", err);
       } finally {
@@ -35,17 +26,11 @@ const Cart = () => {
   // ✅ Delete Item from Cart
   const handleRemoveItem = async (cartItemId) => {
     try {
-      const res = await fetch(`http://localhost:5000/Cravex/cart/${cartItemId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
+      const res = await api.delete(`/Cravex/cart/${cartItemId}`, { withCredentials: true });
+      if (res.status === 200) {
         setCartItems(cartItems.filter((item) => item._id !== cartItemId));
       } else {
-        alert(data.message || "Failed to remove item");
+        alert(res.data.message || "Failed to remove item");
       }
     } catch (err) {
       console.error("Error removing item:", err);
@@ -55,25 +40,16 @@ const Cart = () => {
   // ✅ Update Quantity
   const handleUpdateQuantity = async (cartItemId, newQty) => {
     if (newQty < 1) return;
-
     try {
-      const res = await fetch(`http://localhost:5000/Cravex/cart/${cartItemId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ quantity: newQty }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
+      const res = await api.put(`/Cravex/cart/${cartItemId}`, { quantity: newQty }, { withCredentials: true });
+      if (res.status === 200) {
         setCartItems(
           cartItems.map((item) =>
             item._id === cartItemId ? { ...item, quantity: newQty } : item
           )
         );
       } else {
-        alert(data.message || "Failed to update quantity");
+        alert(res.data.message || "Failed to update quantity");
       }
     } catch (err) {
       console.error("Error updating quantity:", err);
@@ -97,16 +73,8 @@ const Cart = () => {
 
   try {
     // 1️⃣ Create order on backend
-    const res = await fetch("http://localhost:5000/Cravex/order/create-order", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address }),
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Failed to create order");
-
+    const res = await api.post("/Cravex/order/create-order", { address }, { withCredentials: true });
+    const data = res.data;
     // 2️⃣ Configure Razorpay options
     const options = {
       key:import.meta.env.VITE_RAZORPAY_KEY_ID, // replace with env variable in production
@@ -117,17 +85,12 @@ const Cart = () => {
       order_id: data.orderId,
       handler: async function (response) {
         // 3️⃣ Payment successful – update backend
-        await fetch(`http://localhost:5000/Cravex/order/verify-payment`, {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpayOrderId: response.razorpay_order_id,
-            razorpaySignature: response.razorpay_signature,
-            orderDBId: data.orderDBId,
-          }),
-        });
+        await api.post(`/Cravex/order/verify-payment`, {
+          razorpayPaymentId: response.razorpay_payment_id,
+          razorpayOrderId: response.razorpay_order_id,
+          razorpaySignature: response.razorpay_signature,
+          orderDBId: data.orderDBId,
+        }, { withCredentials: true });
         alert("Payment successful! 🎉");
       },
       prefill: {
@@ -139,7 +102,6 @@ const Cart = () => {
         color: "#F97316",
       },
     };
-
     const rzp = new window.Razorpay(options);
     rzp.open();
     return navigate("/order")

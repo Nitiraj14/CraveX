@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../services/api";
 
 const AdminPanel = () => {
   const [activeSection, setActiveSection] = useState("orders");
@@ -17,16 +18,8 @@ const AdminPanel = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:5000/CraveX/order/all", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        credentials: "include"
-      });
-      const data = await res.json();
-      setOrders(Array.isArray(data) ? data : []);
+      const res = await api.get("/Cravex/order/all", { withCredentials: true });
+      setOrders(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to fetch orders:", err);
     }
@@ -34,9 +27,8 @@ const AdminPanel = () => {
 
   const fetchMenuItems = async () => {
     try {
-      const res = await fetch("http://localhost:5000/Cravex/menu");
-      const data = await res.json();
-      setMenuItems(Array.isArray(data) ? data : []);
+      const res = await api.get("/Cravex/menu");
+      setMenuItems(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to fetch menu items:", err);
     }
@@ -44,13 +36,8 @@ const AdminPanel = () => {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      const res = await fetch(`http://localhost:5000/Cravex/order/${id}/status`, {
-        method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (res.ok) {
+      const res = await api.put(`/Cravex/order/${id}/status`, { status: newStatus }, { withCredentials: true });
+      if (res.status === 200) {
         setOrders(orders.map(o => o._id === id ? { ...o, status: newStatus } : o));
       } else {
         alert("Failed to update status ❌");
@@ -62,11 +49,8 @@ const AdminPanel = () => {
 
   const handleDeleteOrder = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/Cravex/order/${id}/delete`, {
-        credentials: "include",
-        method: "DELETE",
-      });
-      if (res.ok) {
+      const res = await api.delete(`/Cravex/order/${id}/delete`, { withCredentials: true });
+      if (res.status === 200) {
         setOrders(orders.filter(o => o._id !== id));
       } else {
         alert("Failed to delete order ❌");
@@ -78,12 +62,8 @@ const AdminPanel = () => {
 
   const handleAddItem = async (newItem) => {
     try {
-      const res = await fetch("http://localhost:5000/Cravex/menu", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newItem),
-      });
-      if (res.ok) {
+      const res = await api.post("/Cravex/menu", newItem);
+      if (res.status === 200) {
         alert("Item added successfully ✅");
         setItemName("");
         setItemDescription("");
@@ -102,14 +82,8 @@ const AdminPanel = () => {
 
   const handleDeleteItem = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/Cravex/menu/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.ok) {
+      const res = await api.delete(`/Cravex/menu/${id}`, { withCredentials: true });
+      if (res.status === 200) {
         setMenuItems(menuItems.filter((item) => item._id !== id));
       } else {
         alert("Failed to delete item");
@@ -128,13 +102,8 @@ const AdminPanel = () => {
     const image = prompt("Enter new image URL:");
     const updatedItem = { name, price, description, category, image };
     try {
-      const res = await fetch(`http://localhost:5000/Cravex/menu/${id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedItem),
-      });
-      if (res.ok) {
+      const res = await api.put(`/Cravex/menu/${id}`, updatedItem, { withCredentials: true });
+      if (res.status === 200) {
         alert("Item updated successfully ✅");
         fetchMenuItems();
       } else {

@@ -1,4 +1,5 @@
 import React from 'react'
+import api from "../services/api";
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
@@ -15,18 +16,13 @@ const Login = ({ onClose, switchToSignup }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5000/CraveX/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-        credentials: "include",
-
-      });
-      const data = await res.json();
-      if (res.ok) {
+      const res = await api.post("/CraveX/auth/login", formData, { withCredentials: true });
+      const data = res.data;
+      if (res.status === 200) {
         alert(data.message + " ✅");
         onClose();
-        navigate(data.redirect,window.location.reload());
+        navigate(data.redirect);
+        window.location.reload();
       } else {
         alert(data.message || "Login failed ❌");
       }

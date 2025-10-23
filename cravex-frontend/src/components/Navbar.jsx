@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../services/api";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Signup from "./Signup";
 import Login from "./Login";
@@ -17,13 +18,9 @@ const Navbar = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await fetch("http://localhost:5000/CraveX/auth/check-token", {
-          method: "GET",
-          credentials: "include", // for cookies
-        });
-        const data = await res.json();
-        setLoggedIn(data.loggedIn);
-        if (data.loggedIn) setUser(data.user);
+        const res = await api.get("/CraveX/auth/check-token", { withCredentials: true });
+        setLoggedIn(res.data.loggedIn);
+        if (res.data.loggedIn) setUser(res.data.user);
       } catch (err) {
         console.error(err);
         setLoggedIn(false);

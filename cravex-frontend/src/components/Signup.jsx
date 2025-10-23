@@ -1,4 +1,5 @@
 import React from 'react'
+import api from "../services/api";
 import Login from './Login';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -16,18 +17,10 @@ const Signup = ({ onClose, switchToLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-
     try {
-      const res = await fetch("http://localhost:5000/CraveX/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-        credentials: "include",
-      });
-
-      const data = await res.json();
-      if (res.ok) {
+      const res = await api.post("/CraveX/auth/signup", formData, { withCredentials: true });
+      const data = res.data;
+      if (res.status === 200) {
         alert("Signup successful ✅");
         window.location.reload();
         onClose(); // close modal
@@ -36,7 +29,6 @@ const Signup = ({ onClose, switchToLogin }) => {
       }
     } catch (err) {
       console.error(err);
-      console.log(err)
       alert("Server error ❌");
     }
   };

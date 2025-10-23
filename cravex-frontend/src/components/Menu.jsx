@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import api from "../services/api";
 import FloatingCartButton from "./floatbutton"; 
 
 const Menu = () => {
@@ -8,14 +9,8 @@ const Menu = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await fetch("http://localhost:5000/Cravex/menu", {
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (res.ok) setMenuItems(data || []);
-        else {
-          console.error("Failed to fetch menu:", data.message || data);
-        }
+        const res = await api.get("/Cravex/menu", { withCredentials: true });
+        setMenuItems(res.data || []);
       } catch (err) {
         console.error("Failed to fetch menu:", err);
       }
@@ -27,15 +22,8 @@ const Menu = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await fetch("http://localhost:5000/Cravex/cart", {
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (res.ok) setCartItems(data.items || []);
-        else {
-          console.error("Error fetching cart:", data.message || data);
-          setCartItems([]);
-        }
+        const res = await api.get("/Cravex/cart", { withCredentials: true });
+        setCartItems(res.data.items || []);
       } catch (err) {
         console.error("Server error:", err);
         setCartItems([]);
@@ -58,22 +46,11 @@ const Menu = () => {
   // Add to cart (POST). Backend returns the cart object (or at least items array)
   const handleAddToCart = async (menuItem, qty = 1) => {
     try {
-      const res = await fetch("http://localhost:5000/Cravex/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          itemId: menuItem._id,
-          quantity: qty,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setCartItems(data.items || []); // replace with server cart items
-      } else {
-        console.error("Add to cart failed:", data.message || data);
-        alert(data.message || "Failed to add to cart");
-      }
+      const res = await api.post("/Cravex/cart", {
+        itemId: menuItem._id,
+        quantity: qty,
+      }, { withCredentials: true });
+      setCartItems(res.data.items || []);
     } catch (err) {
       console.error("Add to cart error:", err);
       alert("Server error while adding to cart");
@@ -85,34 +62,12 @@ const Menu = () => {
     try {
       if (newQty <= 0) {
         // call DELETE to remove item
-        const res = await fetch(`http://localhost:5000/Cravex/cart/${cartItemId}`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setCartItems(data.items || []);
-        } else {
-          console.error("Delete failed:", data.message || data);
-          alert(data.message || "Failed to remove item");
-        }
+        const res = await api.delete(`/Cravex/cart/${cartItemId}`, { withCredentials: true });
+        setCartItems(res.data.items || []);
         return;
       }
-
-      const res = await fetch(`http://localhost:5000/Cravex/cart/${cartItemId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ quantity: newQty }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        // update UI from server response if available
-        setCartItems(data.items || cartItems.map(ci => (ci._id === cartItemId ? { ...ci, quantity: newQty } : ci)));
-      } else {
-        console.error("Update failed:", data.message || data);
-        alert(data.message || "Failed to update quantity");
-      }
+      const res = await api.put(`/Cravex/cart/${cartItemId}`, { quantity: newQty }, { withCredentials: true });
+      setCartItems(res.data.items || cartItems.map(ci => (ci._id === cartItemId ? { ...ci, quantity: newQty } : ci)));
     } catch (err) {
       console.error("Error updating quantity:", err);
       alert("Server error while updating quantity");
