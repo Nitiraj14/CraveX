@@ -3,7 +3,7 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-const MainLayout = ({ children }) => {
+const MainLoader = ({ children }) => {
   return (
     <div>
       <Navbar />
@@ -13,4 +13,4 @@ const MainLayout = ({ children }) => {
   );
 };
 
-export default MainLayout;
+export default MainLoader;

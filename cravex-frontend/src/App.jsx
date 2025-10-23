@@ -8,7 +8,7 @@ import Order from "./pages/order";
 import AdminPanel from "./pages/AdminPanel";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer"; 
-import MainLayout from "./pages/mainloader";
+import MainLoader from "./pages/MainLoader";
 
 
 function App() {
@@ -18,12 +18,12 @@ function App() {
       <div className="scrollbar-hide">
         <div className="">
           <Routes>
-            <Route path="/" element={<MainLayout><Home /></MainLayout>}/>
-            <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
-            <Route path="/signup" element={<MainLayout><Signup /></MainLayout>} />
-            <Route path="/menu" element={<MainLayout><Menu /></MainLayout>} />
-            <Route path="/cart" element={<MainLayout><Cart /></MainLayout>} />
-            <Route path="/order" element={<MainLayout><Order /></MainLayout>} />
+            <Route path="/" element={<MainLoader><Home /></MainLoader>}/>
+            <Route path="/login" element={<MainLoader><Login /></MainLoader>} />
+            <Route path="/signup" element={<MainLoader><Signup /></MainLoader>} />
+            <Route path="/menu" element={<MainLoader><Menu /></MainLoader>} />
+            <Route path="/cart" element={<MainLoader><Cart /></MainLoader>} />
+            <Route path="/order" element={<MainLoader><Order /></MainLoader>} />
             <Route path="/admin" element={<AdminPanel />} />
           </Routes>
         </div>  
