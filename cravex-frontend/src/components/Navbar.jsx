@@ -103,7 +103,7 @@ const Navbar = () => {
             onClick={() => setShowProfile(!showProfile)}
           >
             <img
-              src="src/assets/image/usericon.jpg"
+              src="/image/usericon.jpg"
               alt={user?.name || "profile"}
               className="h-8 w-8 rounded-full object-cover"
             />

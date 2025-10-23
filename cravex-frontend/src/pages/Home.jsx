@@ -35,7 +35,7 @@ const Home = () => {
         {/* Right Half */}
         <div className="w-full md:w-1/2 flex justify-center items-center relative min-h-[300px] md:min-h-0">
           <div className="w-11/12 md:w-10/12 h-48 md:h-4/5 rounded-l-full bg-[rgb(239,139,100)] absolute right-0 top-0 md:top-auto md:right-0">
-            <img src="src/assets/image/—Pngtree—ultimate burger bliss a colorful_20543115.png" alt="Burger" className="h-full w-full object-cover md:rotate-[340deg] absolute" />
+            <img src="/image/—Pngtree—ultimate burger bliss a colorful_20543115.png" alt="Burger" className="h-full w-full object-cover md:rotate-[340deg] absolute" />
           </div>
         </div>
       </div>

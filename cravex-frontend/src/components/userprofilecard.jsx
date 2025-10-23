@@ -49,7 +49,7 @@ const UserProfileCard = () => {
       <div className="flex items-center space-x-3 border-b pb-3 mb-3">
         <div className="h-10 w-10 rounded-full overflow-hidden">
           <img
-            src="src/assets/image/usericon.jpg"
+            src="/image/usericon.jpg"
             alt={user.name || "User"}
             className="h-full w-full object-cover"
           />
