@@ -19,18 +19,19 @@ const Orders = () => {
 
   // Fetch orders for logged-in user
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await api.get("/Cravex/order/user", { withCredentials: true });
-        setOrders(res.data);
-      } catch (err) {
-        console.error("Server error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
+    if (typeof window !== "undefined") {
+      const fetchOrders = async () => {
+        try {
+          const res = await api.get("/Cravex/order/user", { withCredentials: true });
+          setOrders(res.data);
+        } catch (err) {
+          console.error("Server error:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchOrders();
+    }
   }, []);
 
   if (loading) return <div className="text-center py-10">Loading orders...</div>;

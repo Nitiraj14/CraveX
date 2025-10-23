@@ -7,24 +7,26 @@ const UserProfileCard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await api.get("/CraveX/user/get", { withCredentials: true });
-        if (res.data && res.data.user) {
-          setUser(res.data.user);
-        } else {
-          setUser(null);
-        }
-      } catch (err) {
-        console.error("Error fetching user:", err);
-        setUser(null);
-      } finally {
-        setLoading(false);
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        const fetchUser = async () => {
+          try {
+            const res = await api.get("/CraveX/user/get", { withCredentials: true });
+            if (res.data && res.data.user) {
+              setUser(res.data.user);
+            } else {
+              setUser(null);
+            }
+          } catch (err) {
+            console.error("Error fetching user:", err);
+            setUser(null);
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchUser();
       }
-    };
-    fetchUser();
-  }, []);
+    }, []);
 
   const handleLogout = async () => {
     try {

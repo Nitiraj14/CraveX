@@ -9,18 +9,19 @@ const Cart = () => {
   const navigate = useNavigate();
   // ✅ Fetch Cart Items
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await api.get("/Cravex/cart", { withCredentials: true });
-        setCartItems(res.data.items || []);
-      } catch (err) {
-        console.error("Server error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCart();
+    if (typeof window !== "undefined") {
+      const fetchCart = async () => {
+        try {
+          const res = await api.get("/Cravex/cart", { withCredentials: true });
+          setCartItems(res.data.items || []);
+        } catch (err) {
+          console.error("Server error:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchCart();
+    }
   }, []);
 
   // ✅ Delete Item from Cart

@@ -7,30 +7,32 @@ const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        const res = await api.get("/Cravex/menu", { withCredentials: true });
-        setMenuItems(res.data || []);
-      } catch (err) {
-        console.error("Failed to fetch menu:", err);
-      }
-    };
-
-    fetchMenu();
+    if (typeof window !== "undefined") {
+      const fetchMenu = async () => {
+        try {
+          const res = await api.get("/Cravex/menu", { withCredentials: true });
+          setMenuItems(res.data || []);
+        } catch (err) {
+          console.error("Failed to fetch menu:", err);
+        }
+      };
+      fetchMenu();
+    }
   }, []);
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await api.get("/Cravex/cart", { withCredentials: true });
-        setCartItems(res.data.items || []);
-      } catch (err) {
-        console.error("Server error:", err);
-        setCartItems([]);
-      }
-    };
-
-    fetchCart();
+    if (typeof window !== "undefined") {
+      const fetchCart = async () => {
+        try {
+          const res = await api.get("/Cravex/cart", { withCredentials: true });
+          setCartItems(res.data.items || []);
+        } catch (err) {
+          console.error("Server error:", err);
+          setCartItems([]);
+        }
+      };
+      fetchCart();
+    }
   }, []);
 
   // helper to get cartItem for a menu item (works whether itemId is populated object or just id)

@@ -33,13 +33,14 @@ const Signup = ({ onClose, switchToLogin }) => {
     }
   };
   useEffect(() => {
-    // Disable scroll
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      // Enable scroll again when modal closes
-      document.body.style.overflow = "auto";
-    };
+    if (typeof window !== "undefined") {
+      // Disable scroll
+      document.body.style.overflow = "hidden";
+      return () => {
+        // Enable scroll again when modal closes
+        document.body.style.overflow = "auto";
+      };
+    }
   }, []);
 
   return (

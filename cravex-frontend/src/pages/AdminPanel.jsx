@@ -12,8 +12,10 @@ const AdminPanel = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetchOrders();
-    fetchMenuItems();
+    if (typeof window !== "undefined") {
+      fetchOrders();
+      fetchMenuItems();
+    }
   }, []);
 
   const fetchOrders = async () => {

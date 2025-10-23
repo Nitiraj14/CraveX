@@ -16,17 +16,19 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await api.get("/CraveX/auth/check-token", { withCredentials: true });
-        setLoggedIn(res.data.loggedIn);
-        if (res.data.loggedIn) setUser(res.data.user);
-      } catch (err) {
-        console.error(err);
-        setLoggedIn(false);
+    if (typeof window !== "undefined") {
+      const checkAuth = async () => {
+        try {
+          const res = await api.get("/CraveX/auth/check-token", { withCredentials: true });
+          setLoggedIn(res.data.loggedIn);
+          if (res.data.loggedIn) setUser(res.data.user);
+        } catch (err) {
+          console.error(err);
+          setLoggedIn(false);
+        }
       }
+      checkAuth();
     }
-    checkAuth();
   }, []);
 
  

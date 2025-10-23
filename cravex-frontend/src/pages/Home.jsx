@@ -6,11 +6,13 @@ import { useEffect } from 'react';
 const Home = () => {
 
       useEffect(() => {
-      if (window.location.hash === "#menu") {
-        setTimeout(() => {
-          const menuSection = document.getElementById("menu");
-          menuSection?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }, 50);
+      if (typeof window !== "undefined") {
+        if (window.location.hash === "#menu") {
+          setTimeout(() => {
+            const menuSection = document.getElementById("menu");
+            menuSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 50);
+        }
       }
     }, []);
 
