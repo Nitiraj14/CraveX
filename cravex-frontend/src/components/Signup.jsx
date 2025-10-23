@@ -18,7 +18,7 @@ const Signup = ({ onClose, switchToLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/CraveX/auth/signup", formData, { withCredentials: true });
+  const res = await api.post("/Cravex/auth/signup", formData, { withCredentials: true });
       const data = res.data;
       if (res.status === 200) {
         alert("Signup successful ✅");

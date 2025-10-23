@@ -19,7 +19,7 @@ const Navbar = () => {
     if (typeof window !== "undefined") {
       const checkAuth = async () => {
         try {
-          const res = await api.get("/CraveX/auth/check-token", { withCredentials: true });
+          const res = await api.get("/Cravex/auth/check-token", { withCredentials: true });
           setLoggedIn(res.data.loggedIn);
           if (res.data.loggedIn) setUser(res.data.user);
         } catch (err) {
