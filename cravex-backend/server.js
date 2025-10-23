@@ -29,7 +29,7 @@ connection();
 
 //Routes
 app.use(cors({
-  origin: "http://localhost:5173",  // your React app
+  origin: ["http://localhost:5173", "https://Cravex.vercel.app"], // your React app
   credentials: true                 
 }));
 app.use(express.json());
