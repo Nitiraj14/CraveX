@@ -9,7 +9,7 @@ import AdminPanel from "./pages/AdminPanel";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer"; 
 import MainLoader from "./pages/MainLoader";
-// import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
         </div>  
       </div>
     </Router>
-    {/* <Analytics /> */}
+    <Analytics />
     </div>
   );
 }
