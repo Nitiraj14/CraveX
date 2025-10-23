@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 
 // import routers
-import userRouter from './routes/User.js';
+import userRouter from './routes/user.js';
 import menuRouter from './routes/menu.js';
 import cartRouter from './routes/cart.js';
 import orderRouter from './routes/order.js';
