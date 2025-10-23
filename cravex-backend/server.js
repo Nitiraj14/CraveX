@@ -15,43 +15,54 @@ import authRouter from './routes/auth.js';
 dotenv.config();
 const app = express();
 
+// ✅ Vercel automatically provides PORT
 const PORT = process.env.PORT || 5000;
 
+// ✅ MongoDB connection
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB Connected");
+  } catch (error) {
+    console.error("❌ MongoDB connection failed:", error.message);
+    process.exit(1);
+  }
+};
+connectDB();
 
-const connection = async () => {
+// ✅ CORS setup
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? ["https://cravex.vercel.app"] // make sure this matches your frontend URL (all lowercase!)
+    : ["http://localhost:5173", "https://cravex.vercel.app"];
 
-  const conn = await mongoose.connect(process.env.MONGO_URI,console.log(`MongoDB Connected:`));
- 
-  return conn;  
-}
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
-connection();
-
-//Routes
-const allowedOrigins = process.env.NODE_ENV === "production"
-  ? ["https://Cravex.vercel.app"]
-  : ["http://localhost:5173", "https://Cravex.vercel.app"];
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/Cravex/user', userRouter);
-app.use('/Cravex/menu', menuRouter);
-app.use('/Cravex/cart', cartRouter);
-app.use('/Cravex/order', orderRouter);
-app.use('/Cravex/admin', adminRouter);
-app.use('/Cravex/auth', authRouter);
+// ✅ Routes
+app.use("/Cravex/user", userRouter);
+app.use("/Cravex/menu", menuRouter);
+app.use("/Cravex/cart", cartRouter);
+app.use("/Cravex/order", orderRouter);
+app.use("/Cravex/admin", adminRouter);
+app.use("/Cravex/auth", authRouter);
 
-app.get('/', (req, res) => {
-  res.send('CraveX Website is ON Now!')
+// ✅ Base Route
+app.get("/", (req, res) => {
+  res.send("🚀 CraveX Backend is Live!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// ✅ Only listen if running locally (Vercel handles it automatically)
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+}
 
-
-
+// ✅ Export app for Vercel
+export default app;
