@@ -5,6 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
+    ssr: false, // ✅ Disable SSR for Vercel compatibility
     outDir: "dist", // ✅ This is where Vercel will look for your built files
   },
   server: {
