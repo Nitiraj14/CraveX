@@ -2,9 +2,9 @@
   "version": 2,
   "builds": [
     {
-      "src": "cravex-frontend/vite.config.js",
+      "src": "cravex-frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "cravex-frontend/dist" }
+      "config": { "distDir": "dist" }
     },
     {
       "src": "cravex-backend/server.js",
