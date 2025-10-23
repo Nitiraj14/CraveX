@@ -28,9 +28,12 @@ const connection = async () => {
 connection();
 
 //Routes
+const allowedOrigins = process.env.NODE_ENV === "production"
+  ? ["https://Cravex.vercel.app"]
+  : ["http://localhost:5173", "https://Cravex.vercel.app"];
 app.use(cors({
-  origin: ["http://localhost:5173", "https://Cravex.vercel.app"], // your React app
-  credentials: true                 
+  origin: allowedOrigins,
+  credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
